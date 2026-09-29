@@ -268,7 +268,7 @@ const positions = [
   -0.205, -0.32,
   -0.44, -0.32,
 
-  //pintu
+  //pintu (statis, TIDAK dipakai lagi untuk digambar - lihat blok "geometri pintu" di bawah)
   -0.14, -0.75,
   -0.19, -0.75,
   -0.14, -0.58,
@@ -444,7 +444,7 @@ const colors = [
   0.0, 0.0, 0.0,
   0.0, 0.0, 0.0,
 
-  //pintu
+  //pintu (statis, TIDAK dipakai lagi - lihat blok "geometri pintu" di bawah)
   0.98, 1, 0.89,
   0.98, 1, 0.89,
   0.98, 1, 0.89,
@@ -658,6 +658,37 @@ for (let i = 0; i <= ballSegments; i++) {
   ballColorsLocal[colIndex + 2] = ballColorValue[2];
 }
 
+//geometri pintu
+const doorWidth = 0.05;
+const doorHeight = 0.17;
+
+const doorPositionsLocal = [
+  //isi pintu: kanan-bawah, kiri-bawah(engsel/origin), kanan-atas, kiri-atas
+  doorWidth, 0,
+  0, 0,
+  doorWidth, doorHeight,
+  0, doorHeight,
+
+  //outline pintu: kanan-bawah, kiri-bawah(engsel), kiri-atas, kanan-atas
+  doorWidth, 0,
+  0, 0,
+  0, doorHeight,
+  doorWidth, doorHeight,
+];
+
+//warna pintu
+const doorColorsLocal = [
+  0.98, 1, 0.89,
+  0.98, 1, 0.89,
+  0.98, 1, 0.89,
+  0.98, 1, 0.89,
+
+  0.0, 0.0, 0.0,
+  0.0, 0.0, 0.0,
+  0.0, 0.0, 0.0,
+  0.0, 0.0, 0.0,
+];
+
 //position buffer
 const positionBuffer =
   gl.createBuffer();
@@ -714,6 +745,36 @@ gl.bindBuffer(
 gl.bufferData(
   gl.ARRAY_BUFFER,
   new Float32Array(ballColorsLocal),
+  gl.STATIC_DRAW,
+);
+
+//position pintu buffer
+const doorPositionBuffer =
+  gl.createBuffer();
+
+gl.bindBuffer(
+  gl.ARRAY_BUFFER,
+  doorPositionBuffer,
+);
+
+gl.bufferData(
+  gl.ARRAY_BUFFER,
+  new Float32Array(doorPositionsLocal),
+  gl.STATIC_DRAW,
+);
+
+//color pintu buffer
+const doorColorBuffer =
+  gl.createBuffer();
+
+gl.bindBuffer(
+  gl.ARRAY_BUFFER,
+  doorColorBuffer,
+);
+
+gl.bufferData(
+  gl.ARRAY_BUFFER,
+  new Float32Array(doorColorsLocal),
   gl.STATIC_DRAW,
 );
 
@@ -775,6 +836,13 @@ function updateBall(dt) {
   }
 }
 
+//pintu
+const doorHingeX = -0.19;
+const doorHingeY = -0.75;
+const doorMinScaleX = 0.3; //lebar pintu saat terbuka (mengecil)
+const doorMaxScaleX = 1.0; //lebar pintu saat tertutup (ukuran asli)
+const doorSpeed = 1.2;     //kecepatan buka-tutup
+
 //gambar scene
 function drawScene() {
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -801,10 +869,6 @@ function drawScene() {
   //atap kiri
   gl.drawArrays(gl.TRIANGLE_STRIP, 32, 4);
   gl.drawArrays(gl.LINE_LOOP, 36, 4);
-
-  //pintu
-  gl.drawArrays(gl.TRIANGLE_STRIP, 40, 4);
-  gl.drawArrays(gl.LINE_LOOP, 44, 4);
 
   //jendela 1
   gl.drawArrays(gl.TRIANGLE_STRIP, 48, 4);
@@ -854,6 +918,31 @@ function drawBall() {
   gl.drawArrays(gl.TRIANGLE_FAN, 0, ballVertexCount);
 }
 
+//gambar pintu, rotasi di titik engsel
+function drawDoor(seconds) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, doorPositionBuffer);
+  gl.enableVertexAttribArray(positionLocation);
+  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, doorColorBuffer);
+  gl.enableVertexAttribArray(colorLocation);
+  gl.vertexAttribPointer(colorLocation, 3, gl.FLOAT, false, 0, 0);
+
+  //t bergerak naik turun dari 0-1 (memakai sin), lalu dipetakan ke rentang scaleX
+  const t = (Math.sin(seconds * doorSpeed) + 1) / 2;
+  const scaleX = doorMaxScaleX - t * (doorMaxScaleX - doorMinScaleX);
+
+  //kecilkan lebar lalu translasi
+  let matrix = Mat3.identity();
+  matrix = Mat3.multiply(matrix, Mat3.translation(doorHingeX, doorHingeY));
+  matrix = Mat3.multiply(matrix, Mat3.scaling(scaleX, 1.0));
+
+  gl.uniformMatrix3fv(matrixLocation, false, matrix);
+
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  gl.drawArrays(gl.LINE_LOOP, 4, 4);
+}
+
 //render loop
 let lastTime = 0;
 
@@ -861,6 +950,8 @@ function render(time) {
   let dt = (time - lastTime) * 0.001;
   lastTime = time;
   dt = Math.min(dt, 0.05);
+
+  const seconds = time * 0.001;
 
   updateBall(dt);
 
@@ -913,6 +1004,8 @@ function render(time) {
   drawAtas();
 
   drawBall();
+
+  drawDoor(seconds);
 
   requestAnimationFrame(render);
 }
