@@ -2,6 +2,9 @@ import {
   Mat3
 } from "./matrix3.js";
 
+// tambahan : import fungsi update & gambar dari file atas.js.
+import { updateAtas, drawAtas } from "./atas.js";
+
 const canvas =
   document.getElementById(
     "webgl-canvas"
@@ -905,6 +908,10 @@ function render(time) {
 
   drawScene();
 
+  // tambahan : gambar bagian atas (gunung, matahari, burung, awan)
+  updateAtas(dt);
+  drawAtas();
+
   drawBall();
 
   requestAnimationFrame(render);
@@ -927,3 +934,6 @@ canvas.addEventListener("mousemove", (event) => {
 });
 
 requestAnimationFrame(render);
+
+// tambahan : expor supaya atas.js bisa pakai gl / program yang sama sebelumnya
+export { gl, canvas, positionLocation, colorLocation, matrixLocation };
