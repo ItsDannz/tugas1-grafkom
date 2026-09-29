@@ -268,7 +268,7 @@ const positions = [
   -0.205, -0.32,
   -0.44, -0.32,
 
-  //pintu (statis, TIDAK dipakai lagi untuk digambar - lihat blok "geometri pintu" di bawah)
+  //pintu
   -0.14, -0.75,
   -0.19, -0.75,
   -0.14, -0.58,
@@ -444,7 +444,7 @@ const colors = [
   0.0, 0.0, 0.0,
   0.0, 0.0, 0.0,
 
-  //pintu (statis, TIDAK dipakai lagi - lihat blok "geometri pintu" di bawah)
+  //pintu
   0.98, 1, 0.89,
   0.98, 1, 0.89,
   0.98, 1, 0.89,
