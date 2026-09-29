@@ -268,7 +268,7 @@ const positions = [
   -0.205, -0.32,
   -0.44, -0.32,
 
-  //pintu (statis, TIDAK dipakai lagi untuk digambar - lihat blok "geometri pintu" di bawah)
+  //pintu
   -0.14, -0.75,
   -0.19, -0.75,
   -0.14, -0.58,
@@ -388,10 +388,10 @@ const positions = [
 
 const colors = [
   //rumput
-  0.55, 0.75, 0.45,
-  0.55, 0.75, 0.45,
-  0.55, 0.75, 0.45,
-  0.55, 0.75, 0.45,
+  0.75, 0.88, 0.55,
+  0.75, 0.88, 0.55,
+  0.75, 0.88, 0.55,
+  0.75, 0.88, 0.55,
 
   //outline jalan
   0.65, 0.72, 0.66,
@@ -444,7 +444,7 @@ const colors = [
   0.0, 0.0, 0.0,
   0.0, 0.0, 0.0,
 
-  //pintu (statis, TIDAK dipakai lagi - lihat blok "geometri pintu" di bawah)
+  //pintu
   0.98, 1, 0.89,
   0.98, 1, 0.89,
   0.98, 1, 0.89,
