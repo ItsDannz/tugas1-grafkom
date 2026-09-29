@@ -6,13 +6,13 @@
     <title>Tugas 1 Grafika Komputer</title>
     <style>
         body {
-        font-family: sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-color: #f0f2f5;
-        margin: 0;
-        padding: 20px;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
         }
 
         .card {
@@ -22,16 +22,22 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-align: center;
             margin-top: 20px;
+
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
         }
 
-        canvas {
+        canvas, img {
             border: 2px solid #333;
             border-radius: 4px;
-            max-width: 100%;
-            height: auto;
-            background-color: #fff; /* fallback */
+            width: 600px;
+            height: 400px;
+            object-fit: contain;
+            background-color: #fff;
         }
-
     </style>
 </head>
 <body>
@@ -41,6 +47,7 @@
     <p id="info">NDC</p>
 
     <div class="card">
+        <img src="referensi-webgl.jpeg" alt="Gambar Referensi">
         <canvas id="webgl-canvas" width="600" height="400"></canvas>
     </div>
 
